@@ -1,84 +1,125 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const productForm = document.getElementById('product-form');
-    const productList = document.getElementById('product-list');
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color: #f4f4f4;
+}
 
-    productForm.addEventListener('submit', function(event) {
-        event.preventDefault();
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 1em 0;
+}
 
-        const productImage = document.getElementById('product-image').files[0];
-        const productName = document.getElementById('product-name').value;
-        const productPrice = document.getElementById('product-price').value;
-        const productVideo = document.getElementById('product-video').value;
+.admin-form {
+    margin: 2em auto;
+    width: 80%;
+    max-width: 600px;
+    text-align: left;
+}
 
-        if (productImage && productName && productPrice && productVideo) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const product = {
-                    image: e.target.result,
-                    name: productName,
-                    price: productPrice,
-                    video: productVideo
-                };
+.admin-form h2 {
+    text-align: center;
+}
 
-                // Сохранение товара в localStorage
-                let products = JSON.parse(localStorage.getItem('products')) || [];
-                products.push(product);
-                localStorage.setItem('products', JSON.stringify(products));
+.admin-form label {
+    display: block;
+    margin-top: 1em;
+}
 
-                // Очистка формы
-                productForm.reset();
+.admin-form input {
+    width: 100%;
+    padding: 0.5em;
+    margin-top: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
 
-                // Обновление списка товаров
-                displayProducts();
-            };
-            reader.readAsDataURL(productImage);
-        }
-    });
+.admin-form button {
+    background: linear-gradient(to right, #4CAF50, #45a049);
+    color: white;
+    border: none;
+    padding: 1em;
+    margin-top: 1em;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+}
 
-    function displayProducts() {
-        productList.innerHTML = '';
-        const products = JSON.parse(localStorage.getItem('products')) || [];
-        products.forEach((product, index) => {
-            const productItem = document.createElement('div');
-            productItem.classList.add('product-item');
+.admin-form button:hover {
+    background: linear-gradient(to right, #45a049, #4CAF50);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
 
-            const img = document.createElement('img');
-            img.src = product.image;
-            img.alt = product.name;
+.admin-form button:active {
+    background: linear-gradient(to right, #388E3C, #4CAF50);
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-            const name = document.createElement('div');
-            name.classList.add('product-item-name');
-            name.textContent = product.name;
+.product-list {
+    margin: 2em auto;
+    width: 80%;
+    max-width: 600px;
+    text-align: left;
+}
 
-            const price = document.createElement('div');
-            price.classList.add('product-item-price');
-            price.textContent = product.price;
+.product-list h2 {
+    text-align: center;
+}
 
-            const videoLink = document.createElement('a');
-            videoLink.href = product.video;
-            videoLink.target = '_blank';
-            videoLink.textContent = 'Обзор на YouTube';
+.product-item {
+    border: 1px solid #ccc;
+    padding: 1em;
+    margin-top: 1em;
+    border-radius: 4px;
+    position: relative;
+}
 
-            const deleteButton = document.createElement('button');
-            deleteButton.classList.add('product-item-delete');
-            deleteButton.textContent = 'Удалить';
-            deleteButton.addEventListener('click', function() {
-                products.splice(index, 1);
-                localStorage.setItem('products', JSON.stringify(products));
-                displayProducts();
-            });
+.product-item img {
+    max-width: 100%;
+    border-radius: 4px;
+}
 
-            productItem.appendChild(img);
-            productItem.appendChild(name);
-            productItem.appendChild(price);
-            productItem.appendChild(videoLink);
-            productItem.appendChild(deleteButton);
+.product-item-name {
+    font-size: 1.2em;
+    margin-top: 0.5em;
+}
 
-            productList.appendChild(productItem);
-        });
-    }
+.product-item-price {
+    font-size: 1em;
+    color: #4CAF50;
+    margin-top: 0.5em;
+}
 
-    // Отображение товаров при загрузке страницы
-    displayProducts();
-});
+.product-item-delete {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(to right, #ff6347, #ff4500);
+    color: white;
+    border: none;
+    padding: 0.5em;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.product-item-delete:hover {
+    background: linear-gradient(to right, #ff4500, #ff6347);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.product-item-delete:active {
+    background: linear-gradient(to right, #e57373, #ff4500);
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 

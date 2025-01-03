@@ -24,9 +24,17 @@
 
     <script>
         async function fetchProducts() {
-            const response = await fetch('products.json');
-            const products = await response.json();
-            displayProducts(products);
+            try {
+                const response = await fetch('products.json');
+                if (!response.ok) {
+                    throw new Error('Сеть не в порядке. Проверьте файл products.json.');
+                }
+                const products = await response.json();
+                displayProducts(products);
+            } catch (error) {
+                console.error('Ошибка загрузки продуктов:', error);
+                document.getElementById("product-gallery").innerHTML = '<p>Не удалось загрузить товары. Попробуйте позже.</p>';
+            }
         }
 
         function displayProducts(products) {
@@ -37,7 +45,7 @@
                 productDiv.className = "product-card";
                 productDiv.innerHTML = `
                     <h2>${product.name}</h2>
-                    <img src="${product.image}" alt="${product.name}">
+                    <img src="${product.image}" alt="${product.name}" onerror="this.onerror=null;this.src='https://via.placeholder.com/150';">
                     <p>Цена: ${product.price}₽</p>
                     <button class="btn">Заказать</button>
                 `;

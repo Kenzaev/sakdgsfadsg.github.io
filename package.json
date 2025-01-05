@@ -2,15 +2,22 @@
     {
         "name": "Товар 1",
         "price": 100,
-        "video": "https://example.com/video1",
-        "image": "https://via.placeholder.com/150",
+        "video": "https://www.youtube.com/watch?v=example",
+        "images": [
+            "https://via.placeholder.com/150",
+            "https://via.placeholder.com/150"
+        ],
+        "category": "Категория 1",
         "isRecommended": true
     },
     {
         "name": "Товар 2",
         "price": 200,
-        "video": "https://example.com/video2",
-        "image": "https://via.placeholder.com/150",
+        "video": "https://www.youtube.com/watch?v=example",
+        "images": [
+            "https://via.placeholder.com/150"
+        ],
+        "category": "Категория 2",
         "isRecommended": false
     }
 ]

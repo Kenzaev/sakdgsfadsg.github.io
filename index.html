@@ -333,6 +333,7 @@
                     ${isAdmin ? `<button class="btn" onclick="deleteProduct(${index})">Удалить</button>` : ''}
                     <button class="btn" onclick="openReviewModal(${index})">Отзывы</button>
                 `;
+                productDiv.addEventListener('click', () => openModal(product));
                 productsDiv.appendChild(productDiv);
             });
         }
@@ -353,6 +354,7 @@
                     <button class="btn" onclick="addToCart('${product.name}', ${product.price})">В корзину</button>
                     <button class="btn" onclick="viewVideo('${product.video}')">Обзор</button>
                 `;
+                productDiv.addEventListener('click', () => openModal(product));
                 recommendedDiv.appendChild(productDiv);
             });
         }
@@ -398,16 +400,16 @@
             window.open(videoUrl, '_blank');
         }
 
-        function openModal(index) {
-            currentProduct = products[index];
+        function openModal(product) {
+            currentProduct = product;
             currentQuantity = 1;
-            document.getElementById("modalProductName").innerText = currentProduct.name;
+            document.getElementById("modalProductName").innerText = product.name;
             const modalProductImages = document.getElementById("modalProductImages");
-            modalProductImages.innerHTML = currentProduct.images.map(image => `<img src="${image}" alt="${currentProduct.name}" class="active">`).join('');
-            document.getElementById("modalProductPrice").innerText = `Цена: ${currentProduct.price}₽`;
+            modalProductImages.innerHTML = product.images.map(image => `<img src="${image}" alt="${product.name}" class="active">`).join('');
+            document.getElementById("modalProductPrice").innerText = `Цена: ${product.price}₽`;
             document.getElementById("modalProductQuantity").innerText = currentQuantity;
             document.getElementById("productModal").style.display = "block";
-            loadReviewsInModal(currentProduct.name);
+            loadReviewsInModal(product.name);
         }
 
         function closeModal() {

@@ -20,7 +20,6 @@
             padding: 1em;
             text-align: center;
             position: relative;
-            animation: fadeIn 2s;
         }
 
         .menu-button {
@@ -34,6 +33,19 @@
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s, transform 0.3s;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
 
         .menu-button:hover {
@@ -50,7 +62,6 @@
             border-radius: 5px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             z-index: 1;
-            animation: slideIn 0.5s;
         }
 
         .menu-panel button {
@@ -60,13 +71,14 @@
             padding: 0.5em 1em;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
             width: 100%;
             text-align: left;
         }
 
         .menu-panel button:hover {
             background-color: #388e3c;
+            transform: scale(1.1);
         }
 
         main {
@@ -95,7 +107,16 @@
             width: 100%;
             max-width: 600px;
             margin-bottom: 20px;
-            animation: fadeIn 1s;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         .product-card:hover {
@@ -112,7 +133,7 @@
         }
 
         .product-card img:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
 
         .product-card button {
@@ -156,11 +177,12 @@
             margin: 0.5em;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
         }
 
         .cart-item button:hover {
             background-color: #d32f2f;
+            transform: scale(1.1);
         }
 
         .btn {
@@ -191,7 +213,6 @@
             overflow: auto;
             background-color: rgba(0,0,0,0.4);
             padding-top: 60px;
-            animation: fadeIn 0.5s;
         }
 
         .modal-content {
@@ -203,7 +224,9 @@
             max-width: 600px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            animation: zoomIn 0.5s;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
         }
 
         .close {
@@ -211,7 +234,6 @@
             float: right;
             font-size: 28px;
             font-weight: bold;
-            transition: color 0.3s;
         }
 
         .close:hover,
@@ -271,31 +293,63 @@
         }
 
         /* Анимация перехода между картинками */
-        .image-slider {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-        }
-
         .image-slider img {
             width: 100%;
             height: auto;
-            position: absolute;
+            margin: 0 auto;
+            display: block;
+            position: relative;
             opacity: 0;
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            transition: opacity 0.5s ease-in-out;
         }
 
         .image-slider img.active {
             opacity: 1;
-            transform: translateX(0);
         }
 
-        .image-slider img.next {
-            transform: translateX(100%);
+        /* Кнопки перелистывания */
+        .image-slider-buttons {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .image-slider img.prev {
-            transform: translateX(-100%);
+        .image-slider-buttons button {
+            background-color: rgba(76, 175, 80, 0.7);
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .image-slider-buttons button:hover {
+            background-color: #388e3c;
+            transform: scale(1.1);
+        }
+
+        .image-slider-buttons button.left {
+            left: 10px;
+        }
+
+        .image-slider-buttons button.right {
+            right: 10px;
+        }
+
+        /* Контейнер для изображений */
+        .image-slider {
+            position: relative;
+            width: 100%;
+            height: 400px; /* Фиксированная высота для контейнера изображений */
+            overflow: hidden;
         }
 
         /* Чаты */
@@ -311,7 +365,6 @@
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             z-index: 1;
-            animation: slideUp 0.5s;
         }
 
         .chat-header {
@@ -342,43 +395,6 @@
             border: none;
             border-top: 1px solid #ccc;
             border-radius: 0 0 8px 8px;
-        }
-
-        /* Анимации */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(-100%);
-            }
-            to {
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes zoomIn {
-            from {
-                transform: scale(0);
-            }
-            to {
-                transform: scale(1);
-            }
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(100%);
-            }
-            to {
-                transform: translateY(0);
-            }
         }
     </style>
 </head>
@@ -430,9 +446,11 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h2 id="modalProductName"></h2>
+            <div class="image-slider-buttons">
+                <button class="btn left" onclick="prevImage()">◀</button>
+                <button class="btn right" onclick="nextImage()">▶</button>
+            </div>
             <div id="modalProductImages" class="image-slider"></div>
-            <button class="btn" onclick="prevImage()">Предыдущее</button>
-            <button class="btn" onclick="nextImage()">Следующее</button>
             <p id="modalProductPrice"></p>
             <div>
                 <button class="btn" onclick="decreaseQuantity()">-</button>
@@ -473,7 +491,7 @@
                     throw new Error('Ошибка при загрузке товаров');
                 }
                 products = await response.json();
-                displayProducts();
+                displayProducts(products);
                 displayRecommendedProducts();
             } catch (error) {
                 console.error('Ошибка при загрузке товаров:', error);
@@ -481,21 +499,15 @@
         }
 
         // Функция для отображения всех товаров
-        function displayProducts() {
+        function displayProducts(productsToDisplay) {
             const productsDiv = document.getElementById("product-gallery");
             productsDiv.innerHTML = '';
-            products.forEach((product, index) => {
+            productsToDisplay.forEach((product, index) => {
                 const productDiv = document.createElement("div");
                 productDiv.className = "product-card";
                 productDiv.innerHTML = `
                     <h2>${product.name}</h2>
-                    <div class="image-slider">
-                        ${product.images.map((image, imgIndex) => `
-                            <img src="${image}" alt="${product.name}" class="${imgIndex === 0 ? 'active' : ''}">
-                        `).join('')}
-                    </div>
-                    <button class="btn" onclick="prevImage(${index})">Предыдущее</button>
-                    <button class="btn" onclick="nextImage(${index})">Следующее</button>
+                    <img src="${product.images[0]}" alt="${product.name}" onclick="openModal(${index})">
                     <p>Цена: ${product.price}₽</p>
                     <button class="btn" onclick="orderNow('${product.name}')">Заказать сейчас</button>
                     <button class="btn" onclick="addToCart('${product.name}', ${product.price})">В корзину</button>
@@ -512,18 +524,12 @@
             const recommendedDiv = document.getElementById("recommended-products");
             recommendedDiv.innerHTML = '';
             const recommendedProducts = products.filter(product => product.isRecommended);
-            recommendedProducts.forEach(product => {
+            recommendedProducts.forEach((product, index) => {
                 const productDiv = document.createElement("div");
                 productDiv.className = "product-card";
                 productDiv.innerHTML = `
                     <h2>${product.name}</h2>
-                    <div class="image-slider">
-                        ${product.images.map((image, imgIndex) => `
-                            <img src="${image}" alt="${product.name}" class="${imgIndex === 0 ? 'active' : ''}">
-                        `).join('')}
-                    </div>
-                    <button class="btn" onclick="prevImage(${index})">Предыдущее</button>
-                    <button class="btn" onclick="nextImage(${index})">Следующее</button>
+                    <img src="${product.images[0]}" alt="${product.name}" onclick="openModal(${index})">
                     <p>Цена: ${product.price}₽</p>
                     <button class="btn" onclick="orderNow('${product.name}')">Заказать сейчас</button>
                     <button class="btn" onclick="addToCart('${product.name}', ${product.price})">В корзину</button>
@@ -581,12 +587,11 @@
             document.getElementById("modalProductName").innerText = currentProduct.name;
             const modalProductImages = document.getElementById("modalProductImages");
             modalProductImages.innerHTML = '';
-            currentProduct.images.forEach((image, imgIndex) => {
+            currentProduct.images.forEach(image => {
                 const img = document.createElement('img');
                 img.src = image;
                 img.alt = currentProduct.name;
-                img.classList.add('next');
-                if (imgIndex === 0) {
+                if (image === currentProduct.images[0]) {
                     img.classList.add('active');
                 }
                 modalProductImages.appendChild(img);
@@ -625,7 +630,7 @@
         function checkout() {
             if (cart.length > 0) {
                 const cartItems = cart.map(item => `${item.name} - ${item.price}₽ x ${item.quantity}`).join(', ');
-                window.open(`https://wa.me/YOUR_PHONE_NUMBER?text=Я хочу заказать: ${cartItems}`, '_blank');
+                window.open(`https://wa.me/+79686706060?text=Я хочу заказать: ${cartItems}`, '_blank');
             } else {
                 alert('Ваша корзина пуста');
             }
@@ -718,24 +723,36 @@
         }
 
         // Функции для перелистывания изображений
-        function nextImage(index) {
-            const product = products[index];
-            const images = document.querySelectorAll(`.product-card:nth-child(${index + 1}) .image-slider img`);
-            images[currentImageIndex].classList.remove('active');
-            images[currentImageIndex].classList.add('prev');
+        function nextImage() {
+            const images = currentProduct.images;
             currentImageIndex = (currentImageIndex + 1) % images.length;
-            images[currentImageIndex].classList.remove('next');
-            images[currentImageIndex].classList.add('active');
+            const modalProductImages = document.getElementById("modalProductImages");
+            modalProductImages.innerHTML = '';
+            images.forEach((image, index) => {
+                const img = document.createElement('img');
+                img.src = image;
+                img.alt = currentProduct.name;
+                if (index === currentImageIndex) {
+                    img.classList.add('active');
+                }
+                modalProductImages.appendChild(img);
+            });
         }
 
-        function prevImage(index) {
-            const product = products[index];
-            const images = document.querySelectorAll(`.product-card:nth-child(${index + 1}) .image-slider img`);
-            images[currentImageIndex].classList.remove('active');
-            images[currentImageIndex].classList.add('next');
+        function prevImage() {
+            const images = currentProduct.images;
             currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-            images[currentImageIndex].classList.remove('prev');
-            images[currentImageIndex].classList.add('active');
+            const modalProductImages = document.getElementById("modalProductImages");
+            modalProductImages.innerHTML = '';
+            images.forEach((image, index) => {
+                const img = document.createElement('img');
+                img.src = image;
+                img.alt = currentProduct.name;
+                if (index === currentImageIndex) {
+                    img.classList.add('active');
+                }
+                modalProductImages.appendChild(img);
+            });
         }
 
         // Функции для работы с чатом

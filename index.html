@@ -436,6 +436,7 @@
                 <img src="https://via.placeholder.com/40" alt="Friend Avatar">
                 <h3 id="friendName">Выберите друга для начала чата.</h3>
                 <button id="viewProfileBtn">👤</button>
+                <button id="searchBtn">🔍</button>
             </div>
             <div class="stories-container" id="storiesContainer">
                 <!-- Stories will be dynamically added here -->
@@ -487,6 +488,7 @@
         const uploadBtn = document.getElementById('uploadBtn');
         const friendName = document.getElementById('friendName');
         const viewProfileBtn = document.getElementById('viewProfileBtn');
+        const searchBtn = document.getElementById('searchBtn');
         const profileModal = document.getElementById('profileModal');
         const profileName = document.getElementById('profileName');
         const profileInfo = document.getElementById('profileInfo');
@@ -571,6 +573,13 @@
             profileModal.style.display = 'block';
         });
 
+        searchBtn.addEventListener('click', () => {
+            const searchTerm = prompt('Введите текст для поиска:');
+            if (searchTerm) {
+                searchMessages(searchTerm);
+            }
+        });
+
         closeModal.addEventListener('click', () => {
             profileModal.style.display = 'none';
         });
@@ -612,8 +621,14 @@
                 friends[currentFriend].forEach(msg => {
                     const messageElement = document.createElement('div');
                     messageElement.className = `message ${msg.type}`;
-                    messageElement.innerHTML = `${msg.text}<span class="message-time">${msg.time}</span>`;
-                    messageElement.addEventListener('click', () => editMessage(msg.id));
+                    messageElement.innerHTML = `
+                        ${msg.text}
+                        <span class="message-time">${msg.time}</span>
+                        <button class="edit-button" data-id="${msg.id}">✏️</button>
+                        <button class="delete-button" data-id="${msg.id}">🗑️</button>
+                    `;
+                    messageElement.querySelector('.edit-button').addEventListener('click', () => editMessage(msg.id));
+                    messageElement.querySelector('.delete-button').addEventListener('click', () => deleteMessage(msg.id));
                     messagesDiv.appendChild(messageElement);
                 });
             }
@@ -633,7 +648,38 @@
                     saveMessages();
                     updateMessages();
                     messageInput.value = ''; // Очищаем поле ввода
+                    sendBtn.onclick = sendMessage; // Возвращаем стандартное действие кнопки
                 };
+            }
+        }
+
+        function deleteMessage(messageId) {
+            friends[currentFriend] = friends[currentFriend].filter(msg => msg.id !== messageId);
+            saveMessages();
+            updateMessages();
+        }
+
+        function searchMessages(searchTerm) {
+            const filteredMessages = friends[currentFriend].filter(msg =>
+                msg.text.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            messagesDiv.innerHTML = '';
+            if (filteredMessages.length === 0) {
+                messagesDiv.innerHTML = '<p>Нет сообщений, соответствующих поиску.</p>';
+            } else {
+                filteredMessages.forEach(msg => {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = `message ${msg.type}`;
+                    messageElement.innerHTML = `
+                        ${msg.text}
+                        <span class="message-time">${msg.time}</span>
+                        <button class="edit-button" data-id="${msg.id}">✏️</button>
+                        <button class="delete-button" data-id="${msg.id}">🗑️</button>
+                    `;
+                    messageElement.querySelector('.edit-button').addEventListener('click', () => editMessage(msg.id));
+                    messageElement.querySelector('.delete-button').addEventListener('click', () => deleteMessage(msg.id));
+                    messagesDiv.appendChild(messageElement);
+                });
             }
         }
 

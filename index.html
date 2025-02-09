@@ -419,13 +419,10 @@
     <div class="container">
         <nav class="sidebar">
             <h2>Друзья</h2>
-            <ul class="friend-list">
-                <li class="friend-item" data-friend="friend1"><img src="https://via.placeholder.com/40" alt="Friend 1"> Друг 1</li>
-                <li class="friend-item" data-friend="friend2"><img src="https://via.placeholder.com/40" alt="Friend 2"> Друг 2</li>
-                <li class="friend-item" data-friend="friend3"><img src="https://via.placeholder.com/40" alt="Friend 3"> Друг 3</li>
-                <li class="friend-item" data-friend="friend4"><img src="https://via.placeholder.com/40" alt="Friend 4"> Друг 4</li>
-                <li class="friend-item" data-friend="friend5"><img src="https://via.placeholder.com/40" alt="Friend 5"> Друг 5</li>
+            <ul class="friend-list" id="friendList">
+                <!-- Friends will be dynamically added here -->
             </ul>
+            <button id="logoutBtn">Выйти</button>
         </nav>
 
         <main class="chat-window">
@@ -433,7 +430,7 @@
                 <!-- Top stories will be dynamically added here -->
             </div>
             <div class="chat-header">
-                <img src="https://via.placeholder.com/40" alt="Friend Avatar">
+                <img src="https://via.placeholder.com/40" alt="Friend Avatar" id="friendAvatar">
                 <h3 id="friendName">Выберите друга для начала чата.</h3>
                 <button id="viewProfileBtn">👤</button>
                 <button id="searchBtn">🔍</button>
@@ -465,7 +462,7 @@
     <div id="profileModal" class="profile-modal">
         <div class="profile-modal-content">
             <span class="close">&times;</span>
-            <img src="https://via.placeholder.com/100" alt="Friend Avatar">
+            <img src="https://via.placeholder.com/100" alt="Friend Avatar" id="profileAvatar">
             <h2 id="profileName">Имя друга</h2>
             <p id="profileInfo">Информация о друге...</p>
         </div>
@@ -480,6 +477,15 @@
         </div>
     </div>
 
+    <div id="loginModal" class="profile-modal">
+        <div class="profile-modal-content">
+            <span class="close">&times;</span>
+            <h2>Войти</h2>
+            <input type="text" id="loginInput" placeholder="Введите имя пользователя">
+            <button id="loginBtn">Войти</button>
+        </div>
+    </div>
+
     <script>
         const messagesDiv = document.getElementById('messages');
         const messageInput = document.getElementById('messageInput');
@@ -487,11 +493,13 @@
         const fileInput = document.getElementById('fileInput');
         const uploadBtn = document.getElementById('uploadBtn');
         const friendName = document.getElementById('friendName');
+        const friendAvatar = document.getElementById('friendAvatar');
         const viewProfileBtn = document.getElementById('viewProfileBtn');
         const searchBtn = document.getElementById('searchBtn');
         const profileModal = document.getElementById('profileModal');
         const profileName = document.getElementById('profileName');
         const profileInfo = document.getElementById('profileInfo');
+        const profileAvatar = document.getElementById('profileAvatar');
         const closeModal = document.getElementsByClassName('close')[0];
         const storiesContainer = document.getElementById('storiesContainer');
         const storyModal = document.getElementById('storyModal');
@@ -499,6 +507,13 @@
         const storySource = document.getElementById('storySource');
         const closeStoryModal = storyModal.getElementsByClassName('close')[0];
         const topStoriesContainer = document.getElementById('topStoriesContainer');
+        const friendList = document.getElementById('friendList');
+        const loginModal = document.getElementById('loginModal');
+        const loginInput = document.getElementById('loginInput');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        let currentUser = null;
         let currentFriend = '';
         let friends = {
             friend1: [],
@@ -530,6 +545,50 @@
                 type: 'video/mp4'
             }]
         };
+
+        const users = {
+            user1: { name: 'Пользователь 1', friends: ['friend1', 'friend2'] },
+            user2: { name: 'Пользователь 2', friends: ['friend3', 'friend4'] },
+            user3: { name: 'Пользователь 3', friends: ['friend5'] }
+        };
+
+        function loadFriends() {
+            friendList.innerHTML = '';
+            if (currentUser) {
+                users[currentUser].friends.forEach(friend => {
+                    const friendItem = document.createElement('li');
+                    friendItem.className = 'friend-item';
+                    friendItem.dataset.friend = friend;
+                    friendItem.innerHTML = `<img src="https://via.placeholder.com/40" alt="${friend}"> ${friend}`;
+                    friendItem.addEventListener('click', () => {
+                        currentFriend = friend;
+                        friendName.textContent = `Чат с ${friend}`;
+                        friendAvatar.src = `https://via.placeholder.com/40`;
+                        loadMessages();
+                        loadStories();
+                    });
+                    friendList.appendChild(friendItem);
+                });
+            }
+        }
+
+        loginBtn.addEventListener('click', () => {
+            currentUser = loginInput.value.trim();
+            if (users[currentUser]) {
+                loginModal.style.display = 'none';
+                loadFriends();
+            } else {
+                alert('Пользователь не найден');
+            }
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            currentUser = null;
+            currentFriend = '';
+            friendList.innerHTML = '';
+            messagesDiv.innerHTML = '<p>Выберите друга для начала чата.</p>';
+            loginModal.style.display = 'block';
+        });
 
         document.querySelectorAll('.friend-item').forEach(item => {
             item.addEventListener('click', event => {
@@ -570,6 +629,7 @@
         viewProfileBtn.addEventListener('click', () => {
             profileName.textContent = currentFriend;
             profileInfo.textContent = `Информация о ${currentFriend}...`;
+            profileAvatar.src = `https://via.placeholder.com/100`;
             profileModal.style.display = 'block';
         });
 
@@ -582,11 +642,13 @@
 
         closeModal.addEventListener('click', () => {
             profileModal.style.display = 'none';
+            loginModal.style.display = 'none';
         });
 
         window.addEventListener('click', (event) => {
-            if (event.target == profileModal) {
+            if (event.target == profileModal || event.target == loginModal) {
                 profileModal.style.display = 'none';
+                loginModal.style.display = 'none';
             }
         });
 
@@ -742,6 +804,7 @@
             if (savedMessages) {
                 friends = JSON.parse(savedMessages);
             }
+            loginModal.style.display = 'block';
             loadTopStories();
         };
     </script>
